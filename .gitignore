@@ -1,0 +1,7 @@
+.gradle
+.idea
+build
+src/main/resources/bot.properties
+src/main/resources/db.properties
+src/main/resources/g.properties
+src/main/resources/logging.properties
