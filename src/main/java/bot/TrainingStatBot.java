@@ -1,7 +1,9 @@
 package bot;
 
+import bot.commands.AddCommand;
 import bot.commands.ExercisesCommand;
 import bot.commands.StartCommand;
+import bot.enums.ExercisesKeyboardOption;
 import bot.enums.State;
 import org.telegram.telegrambots.extensions.bots.commandbot.TelegramLongPollingCommandBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -22,6 +24,7 @@ public class TrainingStatBot extends TelegramLongPollingCommandBot {
         super();
         register(new StartCommand());
         register(new ExercisesCommand());
+        register(new AddCommand());
     }
 
     @Override
@@ -66,11 +69,22 @@ public class TrainingStatBot extends TelegramLongPollingCommandBot {
     }
 
     private void processCallbackQuery(Update update) {
-        switch (update.getCallbackQuery().getData()) {
-            case Constants.ADD_NEW_EXERCISE:
-                stateMap.put(update.getCallbackQuery().getFrom().getId(), State.NEW_EXERCISE);
-                sendMsg(update.getCallbackQuery().getMessage().getChatId(), Constants.ENTER_EXERCISE_NAME);
+        String[] parsedCallback = update.getCallbackQuery().getData().split("-");
+        if (parsedCallback[0].equals(ExercisesKeyboardOption.EDIT_EXERCISE.toString())) {
+            stateMap.put(update.getCallbackQuery().getFrom().getId(), State.NEW_EXERCISE);
+            sendMsg(update.getCallbackQuery().getMessage().getChatId(), Constants.ENTER_EXERCISE_NAME);
+        } else if (parsedCallback[0].equals(ExercisesKeyboardOption.EDIT_VALUES.toString())) {
+            stateMap.put(update.getCallbackQuery().getFrom().getId(), State.NEW_VALUE);
+            sendMsg(update.getCallbackQuery().getMessage().getChatId(), "Введите результат:");
+        } else if (update.getCallbackQuery().getData().equals(Constants.ADD_NEW_EXERCISE)) {
+            stateMap.put(update.getCallbackQuery().getFrom().getId(), State.NEW_EXERCISE);
+            sendMsg(update.getCallbackQuery().getMessage().getChatId(), Constants.ENTER_EXERCISE_NAME);
         }
+//        switch (update.getCallbackQuery().getData()) {
+//            case Constants.ADD_NEW_EXERCISE:
+//                stateMap.put(update.getCallbackQuery().getFrom().getId(), State.NEW_EXERCISE);
+//                sendMsg(update.getCallbackQuery().getMessage().getChatId(), Constants.ENTER_EXERCISE_NAME);
+//        }
     }
 
     private void processEmptyMessage(Update update) {
@@ -83,6 +97,8 @@ public class TrainingStatBot extends TelegramLongPollingCommandBot {
             exercises.put(user.getId(), userExercises);
             sendMsg(update.getMessage().getChatId(), Constants.SUCCESSFULLY_ADDED);
             stateMap.put(user.getId(), State.FREE);
+        } else if (stateMap.get(user.getId()).equals(State.NEW_VALUE)) {
+            sendMsg(update.getMessage().getChatId(), "+++++");
         } else {
             sendMsg(update.getMessage().getChatId(), Constants.USE_EXERCISE_COMMAND);
         }

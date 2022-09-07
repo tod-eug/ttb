@@ -27,7 +27,7 @@ public class KeyboardFactory {
                 for (String s : usersExercises) {
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(s);
-                    button.setCallbackData("#" + exercisesKeyboardOption + "+" +user.getId() + "+" + toLatinTrans.transliterate(s));
+                    button.setCallbackData(exercisesKeyboardOption + "-" +user.getId() + "-" + toLatinTrans.transliterate(s));
                     rowInline.add(button);
                 }
             }

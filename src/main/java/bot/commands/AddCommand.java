@@ -1,42 +1,29 @@
 package bot.commands;
 
-import bot.Constants;
-import bot.TrainingStatBot;
 import bot.enums.ExercisesKeyboardOption;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
-import java.util.List;
-
-public class ExercisesCommand implements IBotCommand {
+public class AddCommand implements IBotCommand {
     @Override
     public String getCommandIdentifier() {
-        return "exercises";
+        return "add";
     }
 
     @Override
     public String getDescription() {
-        return "exercises";
+        return "add";
     }
 
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
-        List<String> usersExercises = TrainingStatBot.exercises.get(message.getFrom().getId());
-
-        String exercisesList = "";
-        if (!exercisesList.isEmpty()) {
-            for (String s : usersExercises) {
-                exercisesList = exercisesList + "- " + s + "\n";
-            }
-        }
-
         MessageProcessor mp = new MessageProcessor();
         SendMessage sm = new SendMessage();
         sm.setChatId(message.getChatId());
-        sm.setText(Constants.EXERCISES_COMMAND + exercisesList);
-        sm.setReplyMarkup(KeyboardFactory.exercisesList(ExercisesKeyboardOption.EDIT_EXERCISE, message.getFrom()));
+        sm.setText("Выберите упражнение:");
+        sm.setReplyMarkup(KeyboardFactory.exercisesList(ExercisesKeyboardOption.EDIT_VALUES, message.getFrom()));
         mp.sendMsg(absSender, sm);
     }
 }
