@@ -1,11 +1,12 @@
 package bot.commands;
 
+import bot.Constants;
 import bot.TrainingStatBot;
+import bot.enums.ExercisesKeyboardOption;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.List;
 
@@ -31,16 +32,13 @@ public class ExercisesCommand implements IBotCommand {
             }
         }
 
-        String text = "Упражнения: \n " + exercisesList;
+        String text = Constants.EXERCISES_COMMAND + exercisesList;
 
+        MessageProcessor mp = new MessageProcessor();
         SendMessage sm = new SendMessage();
         sm.setChatId(message.getChatId());
         sm.setText(text);
-        sm.setReplyMarkup(KeyboardFactory.exercisesList("exercisesList", message.getFrom()));
-        try {
-            absSender.execute(sm);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+        sm.setReplyMarkup(KeyboardFactory.exercisesList(ExercisesKeyboardOption.EDIT_EXERCISE, message.getFrom()));
+        mp.sendMsg(absSender, sm);
     }
 }

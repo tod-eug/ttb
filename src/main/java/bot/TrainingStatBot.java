@@ -67,9 +67,9 @@ public class TrainingStatBot extends TelegramLongPollingCommandBot {
 
     private void processCallbackQuery(Update update) {
         switch (update.getCallbackQuery().getData()) {
-            case "#addNewExercise":
+            case Constants.ADD_NEW_EXERCISE:
                 stateMap.put(update.getCallbackQuery().getFrom().getId(), State.NEW_EXERCISE);
-                sendMsg(update.getCallbackQuery().getMessage().getChatId(), "Введите название упражнения");
+                sendMsg(update.getCallbackQuery().getMessage().getChatId(), Constants.ENTER_EXERCISE_NAME);
         }
     }
 
@@ -81,10 +81,10 @@ public class TrainingStatBot extends TelegramLongPollingCommandBot {
                 userExercises = new ArrayList<>();
             userExercises.add(update.getMessage().getText());
             exercises.put(user.getId(), userExercises);
-            sendMsg(update.getMessage().getChatId(), "Добавлено!");
+            sendMsg(update.getMessage().getChatId(), Constants.SUCCESSFULLY_ADDED);
             stateMap.put(user.getId(), State.FREE);
         } else {
-            sendMsg(update.getMessage().getChatId(), "Используйте команду /exercises для добавления упражнений");
+            sendMsg(update.getMessage().getChatId(), Constants.USE_EXERCISE_COMMAND);
         }
     }
 

@@ -1,6 +1,8 @@
 package bot.commands;
 
+import bot.Constants;
 import bot.TrainingStatBot;
+import bot.enums.ExercisesKeyboardOption;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public class KeyboardFactory {
 
-    public static ReplyKeyboard exercisesList(String command, User user) {
+    public static ReplyKeyboard exercisesList(ExercisesKeyboardOption exercisesKeyboardOption, User user) {
         List<String> usersExercises = TrainingStatBot.exercises.get(user.getId());
 
         InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
@@ -23,16 +25,16 @@ public class KeyboardFactory {
                 for (String s : usersExercises) {
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(s);
-                    button.setCallbackData("#" + command + "+" +user.getId() + "+" + s);
+                    button.setCallbackData("#" + exercisesKeyboardOption + "+" +user.getId() + "+" + s);
                     rowInline.add(button);
                 }
             }
         }
 
-        if (command.equals("exercisesList")) {
+        if (exercisesKeyboardOption == ExercisesKeyboardOption.EDIT_EXERCISE) {
             InlineKeyboardButton addNewExercise = new InlineKeyboardButton();
             addNewExercise.setText("+");
-            addNewExercise.setCallbackData("#addNewExercise");
+            addNewExercise.setCallbackData(Constants.ADD_NEW_EXERCISE);
             rowInline.add(addNewExercise);
         }
         rowsInline.add(rowInline);

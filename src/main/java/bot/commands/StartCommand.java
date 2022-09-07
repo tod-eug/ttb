@@ -1,10 +1,10 @@
 package bot.commands;
 
+import bot.Constants;
 import org.telegram.telegrambots.extensions.bots.commandbot.commands.IBotCommand;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.bots.AbsSender;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class StartCommand implements IBotCommand {
     @Override
@@ -19,13 +19,10 @@ public class StartCommand implements IBotCommand {
 
     @Override
     public void processMessage(AbsSender absSender, Message message, String[] arguments) {
+        MessageProcessor mp = new MessageProcessor();
         SendMessage sm = new SendMessage();
         sm.setChatId(message.getChatId());
-        sm.setText("Добро пожаловать! Используйте команду /exercises для добавления упражнений");
-        try {
-            absSender.execute(sm);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
-        }
+        sm.setText(Constants.START_REPLY_WELCOME + Constants.USE_EXERCISE_COMMAND);
+        mp.sendMsg(absSender, sm);
     }
 }
