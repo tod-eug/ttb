@@ -3,6 +3,7 @@ package bot.commands;
 import bot.Constants;
 import bot.TrainingStatBot;
 import bot.enums.ExercisesKeyboardOption;
+import com.ibm.icu.text.Transliterator;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -15,6 +16,7 @@ public class KeyboardFactory {
 
     public static ReplyKeyboard exercisesList(ExercisesKeyboardOption exercisesKeyboardOption, User user) {
         List<String> usersExercises = TrainingStatBot.exercises.get(user.getId());
+        Transliterator toLatinTrans = Transliterator.getInstance("Russian-Latin/BGN");
 
         InlineKeyboardMarkup keyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
@@ -25,7 +27,7 @@ public class KeyboardFactory {
                 for (String s : usersExercises) {
                     InlineKeyboardButton button = new InlineKeyboardButton();
                     button.setText(s);
-                    button.setCallbackData("#" + exercisesKeyboardOption + "+" +user.getId() + "+" + s);
+                    button.setCallbackData("#" + exercisesKeyboardOption + "+" +user.getId() + "+" + toLatinTrans.transliterate(s));
                     rowInline.add(button);
                 }
             }
