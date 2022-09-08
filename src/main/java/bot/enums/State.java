@@ -2,6 +2,7 @@ package bot.enums;
 
 public enum State {
     NEW_EXERCISE,
-    NEW_VALUE,
+    APPROACH,
+    VALUE,
     FREE
 }
