@@ -10,41 +10,41 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
-import com.google.api.client.util.store.MemoryDataStoreFactory;
+import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
+import exceptions.ConnectionToGoogleException;
+import util.PropertiesProvider;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class GoogleAuthorizeUtil {
 
-//    public static Credential authorize() throws IOException, GeneralSecurityException {
-
-//        InputStream in = GoogleAuthorizeUtil.class.getResourceAsStream("/client_secret.json");
-//        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(GsonFactory.getDefaultInstance(), new InputStreamReader(in));
-//
-//        List<String> scopes = Arrays.asList(SheetsScopes.SPREADSHEETS);
-//
-//        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), clientSecrets, scopes).setDataStoreFactory(new MemoryDataStoreFactory())
-//                .setAccessType("offline").build();
-//        Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
-//
-//        return credential;
-//    }
-
-    private static final String APPLICATION_NAME = "Google Sheets API Java Quickstart";
-    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final String APPLICATION_NAME = "Training statistic bot";
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
-
+    private static final String CREDENTIALS_FILE_PATH = "/client_secret.json";
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES =
             Collections.singletonList(SheetsScopes.SPREADSHEETS);
-    private static final String CREDENTIALS_FILE_PATH = "/client_secret.json";
+
+    public static Sheets getSheet() {
+        Sheets sheets = null;
+        try {
+            Credential credential = GoogleAuthorizeUtil.getCredentials(GoogleNetHttpTransport.newTrustedTransport());
+            return sheets = new Sheets.Builder(
+                    GoogleNetHttpTransport.newTrustedTransport(),
+                    GsonFactory.getDefaultInstance(), credential)
+                    .setApplicationName(APPLICATION_NAME)
+                    .build();
+        } catch (IOException | GeneralSecurityException e) {
+            throw new ConnectionToGoogleException("Connecting error");
+        }
+    }
 
     public static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT)
             throws IOException {

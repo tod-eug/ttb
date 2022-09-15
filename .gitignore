@@ -1,6 +1,7 @@
 .gradle
 .idea
 build
+tokens
 src/main/resources/bot.properties
 src/main/resources/db.properties
 src/main/resources/g.properties
